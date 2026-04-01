@@ -1,10 +1,17 @@
 const express = require("express");
+const sanitizeHtml = require("sanitize-html");
 const Todo = require("./TodoModel");
 const routes = express.Router();
 
 // CRIAR
 routes.post("/", async (req, res) => {
-  await Todo.create({ task: req.body.task });
+  const sanitizedTask = sanitizeHtml(req.body.task);
+  
+  if (!sanitizedTask.trim()) {
+    return res.status(400).redirect("/");
+  }
+  
+  await Todo.create({ task: sanitizedTask });
   res.redirect("/");
 });
 
@@ -19,7 +26,13 @@ routes.put("/:id", async (req, res) => {
   const todo = await Todo.findByPk(req.params.id);
 
   if (todo) {
-    todo.task = req.body.task;
+    const sanitizedTask = sanitizeHtml(req.body.task);
+
+    if (!sanitizedTask.trim()) {
+      return res.status(400).redirect("/");
+    }
+    
+    todo.task = sanitizedTask;
     await todo.save();
   }
 
