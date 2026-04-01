@@ -1,0 +1,86 @@
+:root {
+  --bg-body: #f0f0f0;
+  --bg-button: #004da0;
+  --border-button: #c9d4e8;
+  --bg-li: #f7faff;
+  --border-li: #d9e4f8;
+  --text-color: #fff;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--bg-body);
+  padding: 10px 12px;
+}
+
+@media (min-width: 800px) {
+  body {
+    width: 60%;
+    margin: 0 auto;
+  }
+}
+
+form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+input {
+  flex: 1;
+  border: 1px solid var(--border-button);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 1rem;
+}
+
+ul {
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+li {
+  display: flex;
+  background: var(--bg-li);
+  border: 1px solid var(--border-li);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+span {
+  flex: 1;
+  font-size: 1rem;
+}
+
+button {
+  background-color: var(--bg-button);
+  color: var(--text-color);
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 10px 12px;
+}
+
+
+a {
+  border-radius: 8px;
+  font-size: 1rem;
+  border: none;
+  color: var(--text-color);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+li button {
+  background-color: var(--text-color);
+  width: 38px;
+  height: 38px;
+}
+
+a:hover,
+button:hover {
+  opacity: 0.8;
+}
+

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Todo List</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>Lista de Tarefas</h1>
+
+  <!-- criar -->
+  <form action="/" method="POST">
+    <input type="text" name="task" placeholder="Nova tarefa" required />
+    <button type="submit">Adicionar</button>
+  </form>
+
+  <ul>
+    <% todoList.forEach(todo => { %>
+      <li>
+
+        <!-- tarefas -->
+        <span style="text-decoration: <%= todo.finish ? 'line-through' : 'none' %>">
+          <%= todo.task %>
+        </span>
+
+
+        <!-- Alternar (concluir/desfazer) -->
+        <form action="/<%= todo.id %>/toggle" method="POST">
+          <button type="submit" title="<%= todo.finish ? 'Desfazer' : 'Concluir' %>">
+            <%= todo.finish ? "✔️" : "❌" %>
+          </button>
+        </form>
+     
+
+        <!-- Editar -->
+        <button>
+          <a href="/<%= todo.id %>/edit" title="Editar">✏️</a>
+        </button>
+        
+                
+
+        <!-- Deletar -->
+        <form action="/<%= todo.id %>?_method=DELETE" method="POST">
+          <button type="submit" title="Excluir">🗑️</button>
+        </form>
+      </li>
+    <% }) %>
+  </ul>
+</body>
+</html>
