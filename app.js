@@ -27,3 +27,5 @@ app.use("/", routes);
 app.listen(PORT, () => {
   console.log(`Rodando em http://localhost:${PORT}`);
 });
+
+module.exports = app;
