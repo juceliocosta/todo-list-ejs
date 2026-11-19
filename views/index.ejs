@@ -13,10 +13,14 @@
     <button type="submit">Adicionar</button>
   </form>
 
-  <ul>
+  <ul> 
+    
+    <span class="error">
+      <%= (typeof error !== 'undefined') ? error : '' %>
+    </span>
+
     <% todoList.forEach(todo => { %>
       <li>
-
         <!-- tarefas -->
         <span style="text-decoration: <%= todo.finish ? 'line-through' : 'none' %>">
           <%= todo.task %>

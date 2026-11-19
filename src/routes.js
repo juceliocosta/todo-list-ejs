@@ -3,20 +3,21 @@ const sanitizeHtml = require("sanitize-html");
 const validator = require("validator");
 const Todo = require("./models/TodoModel");
 const routes = express.Router();
-
 // CRIAR
 routes.post("/", async (req, res) => {
   const sanitizedTask = sanitizeHtml(req.body.task);
-  
+
   if (!sanitizedTask.trim()) {
-    return res.status(400).redirect("/");
+    const todoList = await Todo.findAll();
+    return res.status(400).render("index", { todoList, error: "A tarefa não pode estar vazia" });
   }
-  try{
+
+  try {
     await Todo.create({ task: sanitizedTask });
-    res.status(201).redirect("/");
+    return res.redirect(303, "/");
 
   } catch (error) {
-    res.status(500).redirect("/");
+    return res.status(500).render("server-error", { error: "Erro no servidor ao criar a tarefa" });
   }
 });
 
@@ -27,7 +28,7 @@ routes.get("/", async (req, res) => {
     res.status(200).render("index", { todoList });
 
   } catch (error) {
-    res.status(500).redirect("/");
+    return res.status(500).render("server-error", { error: "Erro no servidor ao consultar tarefas" });
   }
 });
 
@@ -37,32 +38,38 @@ routes.put("/:id", async (req, res) => {
   const sanitizedTask = sanitizeHtml(req.body.task);
 
   if (!validator.isInt(id) || !sanitizedTask.trim()) {
-    return res.status(400).redirect("/");
+    const todoList = await Todo.findAll();
+    return res.status(400).render("index", { todoList, error: "A tarefa não pode estar vazia" });
   }
   try {
     const todo = await Todo.update(
       { task: sanitizedTask },
       { where: { id } }
     );
-    res.status(200).redirect("/");
+    const todoList = await Todo.findAll();
+    res.status(200).render("index", { todoList });
 
   } catch (error) {
-    res.status(500).redirect("/");
+    return res.status(500).render("server-error", { error: "Erro no servidor ao atualizar a tarefa" });
   }
 });
 
 // DELETAR
 routes.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  if (!validator.isInt(id)) return res.status(400).redirect("/");
+  if (!validator.isInt(id)) return res.redirect(303, "/");
 
   try {
     const todo = await Todo.destroy({ where: { id } });
-    if (todo === 0) return res.status(404).redirect("/");
-    res.status(200).redirect("/");
+    if (todo === 0) return res.status(404).render("404", {
+      error: "Tarefa não encontrada."
+    });
+    
+    const todoList = await Todo.findAll();
+    res.status(200).render("index", { todoList });
 
   } catch (error) {
-    res.status(500).redirect("/");
+    return res.status(500).render("server-error", { error: "Erro no servidor ao deletar a tarefa" });
   }
 });
 
@@ -70,26 +77,40 @@ routes.delete("/:id", async (req, res) => {
 // TELA DE EDIÇÃO
 routes.get("/:id/edit", async (req, res) => {
   const { id } = req.params;
-  if (!validator.isInt(id)) return res.status(400).redirect("/");
+  if (!validator.isInt(id) ) return res.redirect(303, "/");
   
-  const todo = await Todo.findByPk(id);
-  if (!todo) return res.status(404).redirect("/");
+  try {
+    const todo = await Todo.findByPk(id);
+    if (!todo) return res.status(404).render("404", {
+      error: "Tarefa não encontrada."
+    });
+  
+    return res.status(200).render("edit", { todo });
 
-  res.status(200).render("edit", { todo });
+  } catch (error) {
+    return res.status(500).render("server-error", { error: "Erro no servidor ao consultar a tarefa" });
+  }
 });
 
 
 // Alternar (concluir/desfazer)
 routes.post("/:id/toggle", async (req, res) => {
   const { id } = req.params;
-  if (!validator.isInt(id)) return res.status(400).redirect("/");
+  if (!validator.isInt(id) ) return res.redirect(303, "/");
 
-  const todo = await Todo.findByPk(id);
-  if (todo) {
+  try {
+    const todo = await Todo.findByPk(id);
+    if (!todo) return res.status(404).render("404", {
+      error: "Tarefa não encontrada."
+    });
+    
     todo.finish = !todo.finish;
     await todo.save();
+    return res.redirect(303, "/");
+
+  } catch (error) {
+    return res.status(500).render("server-error", { error: "Erro no servidor ao alternar a tarefa" });
   }
-  res.status(200).redirect("/");
 });
 
 module.exports = routes;
