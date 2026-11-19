@@ -2,10 +2,10 @@
   "name": "todo-list-ejs",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "node --watch --env-file=.env.example app.js",
-    "start": "node --env-file=.env app.js",
+    "dev": "node --watch --env-file=.env.example server.js",
+    "start": "node --env-file=.env server.js",
     "test": "node --env-file=.env.example ./node_modules/jest/bin/jest.js --forceExit"
   },
   "keywords": [],
