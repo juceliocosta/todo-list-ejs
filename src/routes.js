@@ -1,7 +1,7 @@
 const express = require("express");
 const sanitizeHtml = require("sanitize-html");
 const validator = require("validator");
-const Todo = require("./TodoModel");
+const Todo = require("./models/TodoModel");
 const routes = express.Router();
 
 // CRIAR

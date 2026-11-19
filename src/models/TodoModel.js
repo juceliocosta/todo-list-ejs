@@ -1,6 +1,6 @@
 //https://sequelize.org/docs/v6/core-concepts/model-basics/
 const { Model, DataTypes } = require("sequelize");
-const sequelize = require("./database");
+const sequelize = require("../config/database");
 
 class Todo extends Model {}
 

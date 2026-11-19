@@ -1,7 +1,7 @@
 const express = require("express");
 const methodOverride = require("method-override");
-const sequelize = require("./database");
-const routes = require("./routes");
+const sequelize = require("./src/config/database");
+const routes = require("./src/routes");
 
 const app = express();
 const PORT = 3000;
